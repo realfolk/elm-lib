@@ -3,7 +3,7 @@
     "name": "realfolk/elm-lib",
     "summary": "Handy functions by Real Folk. Highly experimental and undocumented.",
     "license": "LGPL-3.0",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "exposed-modules": [
       "Lib",
       "Lib.Browser",
@@ -40,20 +40,15 @@
     ],
     "elm-version": "0.19.0 <= v < 0.20.0",
     "dependencies": {
-        "cmditch/elm-bigint": "2.0.1",
-        "elm/browser": "1.0.2",
-        "elm/core": "1.0.5",
-        "elm/html": "1.0.0",
-        "elm/time": "1.0.0",
-        "elm/url": "1.0.0",
-        "rtfeldman/elm-css": "16.1.1"
+        "cmditch/elm-bigint": "2.0.1 <= v < 3.0.0",
+        "elm/browser": "1.0.2 <= v < 2.0.0",
+        "elm/core": "1.0.5 <= v < 2.0.0",
+        "elm/html": "1.0.0 <= v < 2.0.0",
+        "elm/time": "1.0.0 <= v < 2.0.0",
+        "elm/url": "1.0.0 <= v < 2.0.0",
+        "rtfeldman/elm-css": "16.1.1 <= v < 17.0.0"
     },
     "test-dependencies": {
-        "direct": {
-            "elm-explorations/test": "1.2.2"
-        },
-        "indirect": {
-            "elm/random": "1.0.0"
-        }
+        "elm-explorations/test": "1.2.2 <= v < 2.0.0"
     }
 }
