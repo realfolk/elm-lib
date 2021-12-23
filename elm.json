@@ -1,54 +1,34 @@
 {
-    "type": "package",
-    "name": "realfolk/elm-lib",
-    "summary": "Handy functions by Real Folk. Highly experimental and undocumented.",
-    "license": "LGPL-3.0",
-    "version": "1.0.0",
-    "exposed-modules": [
-      "Lib",
-      "Lib.Browser",
-      "Lib.Browser.History",
-      "Lib.List",
-      "Lib.Math",
-      "Lib.Math.BigInt.Extra",
-      "Lib.Math.Rational",
-      "Lib.Maybe",
-      "Lib.Queue",
-      "Lib.RemoteData",
-      "Lib.Result",
-      "Lib.Stack",
-      "Lib.Time",
-      "Lib.Time.Civil",
-      "Lib.Time.Date",
-      "Lib.Time.Date.Formatter",
-      "Lib.Time.Days",
-      "Lib.Time.Formatter",
-      "Lib.Time.Hours",
-      "Lib.Time.Microseconds",
-      "Lib.Time.Milliseconds",
-      "Lib.Time.Minutes",
-      "Lib.Time.Month",
-      "Lib.Time.Nanoseconds",
-      "Lib.Time.Picoseconds",
-      "Lib.Time.Seconds",
-      "Lib.Time.Weekday",
-      "Lib.Time.Weeks",
-      "Lib.Time.Years",
-      "Lib.Url.Parser",
-      "Lib.Url.Path",
-      "Lib.Url.Query"
+    "type": "application",
+    "source-directories": [
+        "src"
     ],
-    "elm-version": "0.19.0 <= v < 0.20.0",
+    "elm-version": "0.19.1",
     "dependencies": {
-        "cmditch/elm-bigint": "2.0.1 <= v < 3.0.0",
-        "elm/browser": "1.0.2 <= v < 2.0.0",
-        "elm/core": "1.0.5 <= v < 2.0.0",
-        "elm/html": "1.0.0 <= v < 2.0.0",
-        "elm/time": "1.0.0 <= v < 2.0.0",
-        "elm/url": "1.0.0 <= v < 2.0.0",
-        "rtfeldman/elm-css": "16.1.1 <= v < 17.0.0"
+        "direct": {
+            "cmditch/elm-bigint": "2.0.1",
+            "elm/browser": "1.0.2",
+            "elm/core": "1.0.5",
+            "elm/html": "1.0.0",
+            "elm/time": "1.0.0",
+            "elm/url": "1.0.0",
+            "rtfeldman/elm-css": "16.1.1"
+        },
+        "indirect": {
+            "elm/json": "1.1.3",
+            "elm/regex": "1.0.0",
+            "elm/virtual-dom": "1.0.2",
+            "elm-community/list-extra": "8.4.0",
+            "elm-community/maybe-extra": "5.2.0",
+            "rtfeldman/elm-hex": "1.0.0"
+        }
     },
     "test-dependencies": {
-        "elm-explorations/test": "1.2.2 <= v < 2.0.0"
+        "direct": {
+            "elm-explorations/test": "1.2.2"
+        },
+        "indirect": {
+            "elm/random": "1.0.0"
+        }
     }
 }
