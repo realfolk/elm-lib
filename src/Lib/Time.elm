@@ -30,6 +30,7 @@ module Lib.Time exposing
     , getMinute
     , getMonth
     , getSecond
+    , getTimeZone
     , getWeekday
     , getYear
     , here
@@ -50,6 +51,7 @@ module Lib.Time exposing
     )
 
 import BigInt exposing (BigInt)
+import Lib.Task as Task
 import Lib.Time.Days as Days exposing (Days)
 import Lib.Time.Hours as Hours exposing (Hours)
 import Lib.Time.Microseconds as Microseconds exposing (Microseconds)
@@ -111,6 +113,11 @@ here =
 customZone : Int -> List { start : Int, offset : Int } -> Zone
 customZone offset exceptions =
     Zone <| Time.customZone offset exceptions
+
+
+getTimeZone : (Zone -> msg) -> Cmd msg
+getTimeZone toMsg =
+    Task.safely (toMsg utc) toMsg here
 
 
 
