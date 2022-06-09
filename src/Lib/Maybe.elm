@@ -1,15 +1,26 @@
 module Lib.Maybe exposing
     ( foldlToMaybe
     , foldrToMaybe
+    , isJust
+    , isNothing
     , mapToMaybe
     , sequence
     , toBool
     )
 
+
+isJust : Maybe a -> Bool
+isJust =
+    (/=) Nothing
+
+
+isNothing : Maybe a -> Bool
+isNothing =
+    (==) Nothing
+
+
 {-| Convert a `Maybe` to a `Bool`. A `Just` results in `True`, and `Nothing` results in `False`.
 -}
-
-
 toBool : Maybe a -> Bool
 toBool =
     Maybe.map (always True) >> Maybe.withDefault False
