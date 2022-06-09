@@ -1,6 +1,5 @@
 module Lib exposing (..)
 
-import Browser.Dom as BD
 import Html.Styled as H
 import Lib.Time as Time
 import Process
@@ -35,11 +34,6 @@ delay : Float -> msg -> Cmd msg
 delay ms msg =
     Process.sleep ms
         |> Task.perform (always msg)
-
-
-focus : String -> msg -> Cmd msg
-focus id msg =
-    safely msg (always msg) (BD.focus id)
 
 
 getTimeZone : (Time.Zone -> msg) -> Cmd msg

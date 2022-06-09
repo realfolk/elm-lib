@@ -6,12 +6,15 @@ module Lib.Browser exposing
     , application
     , document
     , element
+    , focus
     , getViewport
     , getViewportOf
     , load
     , onResize
     , pushUrl
     , sandbox
+    , scrollToTop
+    , scrollToTopOf
     , setViewportOf
     , toUnstyledDocument
     )
@@ -145,6 +148,16 @@ fromExternalUrlRequest request =
 
 
 
+-- DOM
+
+
+focus : String -> msg -> Cmd msg
+focus id msg =
+    BD.focus id
+        |> Task.attempt (always msg)
+
+
+
 -- VIEWPORT
 
 
@@ -165,6 +178,18 @@ getViewportOf id defaultMsg toMsg =
 setViewportOf : String -> Float -> Float -> msg -> msg -> Cmd msg
 setViewportOf id x y defaultMsg toMsg =
     Lib.safely defaultMsg (always toMsg) <| BD.setViewportOf id x y
+
+
+scrollToTop : msg -> Cmd msg
+scrollToTop msg =
+    BD.setViewport 0 0
+        |> Task.perform (always msg)
+
+
+scrollToTopOf : String -> msg -> Cmd msg
+scrollToTopOf id msg =
+    BD.setViewportOf id 0 0
+        |> Task.attempt (always msg)
 
 
 
