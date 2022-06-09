@@ -1,12 +1,5 @@
 module Lib exposing (..)
 
-import Html.Styled as H
-import Tuple
-
-
-type alias Element msg =
-    List (H.Attribute msg) -> List (H.Html msg) -> H.Html msg
-
 
 flip : (a -> b -> c) -> b -> a -> c
 flip f b a =
