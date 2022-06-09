@@ -13,15 +13,6 @@ flip f b a =
     f a b
 
 
-iff : Bool -> a -> a -> a
-iff condition then_ else_ =
-    if condition then
-        then_
-
-    else
-        else_
-
-
 zip : List x -> List y -> List ( x, y )
 zip xs ys =
     List.map2 Tuple.pair xs ys
