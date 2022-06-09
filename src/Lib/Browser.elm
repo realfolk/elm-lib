@@ -24,7 +24,7 @@ import Browser.Dom as BD
 import Browser.Events as BE
 import Browser.Navigation as BN
 import Html.Styled as H
-import Lib
+import Lib.Task as Task
 import Task
 import Url exposing (Url)
 
@@ -172,12 +172,12 @@ getViewport toMsg =
 
 getViewportOf : String -> msg -> (Viewport -> msg) -> Cmd msg
 getViewportOf id defaultMsg toMsg =
-    Lib.safely defaultMsg toMsg <| BD.getViewportOf id
+    Task.safely defaultMsg toMsg <| BD.getViewportOf id
 
 
 setViewportOf : String -> Float -> Float -> msg -> msg -> Cmd msg
 setViewportOf id x y defaultMsg toMsg =
-    Lib.safely defaultMsg (always toMsg) <| BD.setViewportOf id x y
+    Task.safely defaultMsg (always toMsg) <| BD.setViewportOf id x y
 
 
 scrollToTop : msg -> Cmd msg
