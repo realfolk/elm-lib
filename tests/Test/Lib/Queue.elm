@@ -21,13 +21,13 @@ constructorSuite =
             \_ ->
                 Queue.empty
                     |> Queue.isEmpty
-                    |> Expect.true "Expected the queue to be empty"
+                    |> Expect.equal True
         , describe "fromList"
             [ test "[]" <|
                 \_ ->
                     Queue.fromList []
                         |> Queue.isEmpty
-                        |> Expect.true "Expected the queue to be empty"
+                        |> Expect.equal True
             , test "[1]" <|
                 \_ ->
                     Queue.fromList [ 1 ]
