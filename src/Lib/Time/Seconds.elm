@@ -2,14 +2,15 @@ module Lib.Time.Seconds exposing
     ( Seconds
     , add
     , div
-    , fromBigInt
     , fromInt
+    , fromInteger
     , mul
     , sub
-    , toBigInt
+    , toInteger
     )
 
-import BigInt exposing (BigInt)
+import Integer as Z exposing (Integer)
+import Lib.Math.Integer as Z
 
 
 
@@ -17,26 +18,26 @@ import BigInt exposing (BigInt)
 
 
 type Seconds
-    = Seconds BigInt
+    = Seconds Integer
 
 
 
 -- GENERAL HELPERS
 
 
-toBigInt : Seconds -> BigInt
-toBigInt (Seconds n) =
+toInteger : Seconds -> Integer
+toInteger (Seconds n) =
     n
 
 
-fromBigInt : BigInt -> Seconds
-fromBigInt =
+fromInteger : Integer -> Seconds
+fromInteger =
     Seconds
 
 
 fromInt : Int -> Seconds
 fromInt =
-    BigInt.fromInt >> fromBigInt
+    Z.fromSafeInt >> fromInteger
 
 
 
@@ -44,30 +45,30 @@ fromInt =
 
 
 add =
-    map2 BigInt.add
+    map2 Z.add
 
 
 sub =
-    map2 BigInt.sub
+    map2 Z.sub
 
 
 mul =
-    map2 BigInt.mul
+    map2 Z.mul
 
 
 div =
-    map2 BigInt.div
+    map2 Z.div
 
 
 
 -- INTERNAL HELPERS
 
 
-map : (BigInt -> BigInt) -> Seconds -> Seconds
+map : (Integer -> Integer) -> Seconds -> Seconds
 map f (Seconds a) =
     Seconds <| f a
 
 
-map2 : (BigInt -> BigInt -> BigInt) -> Seconds -> Seconds -> Seconds
+map2 : (Integer -> Integer -> Integer) -> Seconds -> Seconds -> Seconds
 map2 f (Seconds a) (Seconds b) =
     Seconds <| f a b

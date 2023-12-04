@@ -2,14 +2,15 @@ module Lib.Time.Microseconds exposing
     ( Microseconds
     , add
     , div
-    , fromBigInt
     , fromInt
+    , fromInteger
     , mul
     , sub
-    , toBigInt
+    , toInteger
     )
 
-import BigInt exposing (BigInt)
+import Integer as Z exposing (Integer)
+import Lib.Math.Integer as Z
 
 
 
@@ -17,26 +18,26 @@ import BigInt exposing (BigInt)
 
 
 type Microseconds
-    = Microseconds BigInt
+    = Microseconds Integer
 
 
 
 -- GENERAL HELPERS
 
 
-toBigInt : Microseconds -> BigInt
-toBigInt (Microseconds n) =
+toInteger : Microseconds -> Integer
+toInteger (Microseconds n) =
     n
 
 
-fromBigInt : BigInt -> Microseconds
-fromBigInt =
+fromInteger : Integer -> Microseconds
+fromInteger =
     Microseconds
 
 
 fromInt : Int -> Microseconds
 fromInt =
-    BigInt.fromInt >> fromBigInt
+    Z.fromSafeInt >> fromInteger
 
 
 
@@ -44,30 +45,30 @@ fromInt =
 
 
 add =
-    map2 BigInt.add
+    map2 Z.add
 
 
 sub =
-    map2 BigInt.sub
+    map2 Z.sub
 
 
 mul =
-    map2 BigInt.mul
+    map2 Z.mul
 
 
 div =
-    map2 BigInt.div
+    map2 Z.div
 
 
 
 -- INTERNAL HELPERS
 
 
-map : (BigInt -> BigInt) -> Microseconds -> Microseconds
+map : (Integer -> Integer) -> Microseconds -> Microseconds
 map f (Microseconds a) =
     Microseconds <| f a
 
 
-map2 : (BigInt -> BigInt -> BigInt) -> Microseconds -> Microseconds -> Microseconds
+map2 : (Integer -> Integer -> Integer) -> Microseconds -> Microseconds -> Microseconds
 map2 f (Microseconds a) (Microseconds b) =
     Microseconds <| f a b

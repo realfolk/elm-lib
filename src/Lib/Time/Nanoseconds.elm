@@ -2,14 +2,15 @@ module Lib.Time.Nanoseconds exposing
     ( Nanoseconds
     , add
     , div
-    , fromBigInt
     , fromInt
+    , fromInteger
     , mul
     , sub
-    , toBigInt
+    , toInteger
     )
 
-import BigInt exposing (BigInt)
+import Integer as Z exposing (Integer)
+import Lib.Math.Integer as Z
 
 
 
@@ -17,26 +18,26 @@ import BigInt exposing (BigInt)
 
 
 type Nanoseconds
-    = Nanoseconds BigInt
+    = Nanoseconds Integer
 
 
 
 -- GENERAL HELPERS
 
 
-toBigInt : Nanoseconds -> BigInt
-toBigInt (Nanoseconds n) =
+toInteger : Nanoseconds -> Integer
+toInteger (Nanoseconds n) =
     n
 
 
-fromBigInt : BigInt -> Nanoseconds
-fromBigInt =
+fromInteger : Integer -> Nanoseconds
+fromInteger =
     Nanoseconds
 
 
 fromInt : Int -> Nanoseconds
 fromInt =
-    BigInt.fromInt >> fromBigInt
+    Z.fromSafeInt >> fromInteger
 
 
 
@@ -44,30 +45,30 @@ fromInt =
 
 
 add =
-    map2 BigInt.add
+    map2 Z.add
 
 
 sub =
-    map2 BigInt.sub
+    map2 Z.sub
 
 
 mul =
-    map2 BigInt.mul
+    map2 Z.mul
 
 
 div =
-    map2 BigInt.div
+    map2 Z.div
 
 
 
 -- INTERNAL HELPERS
 
 
-map : (BigInt -> BigInt) -> Nanoseconds -> Nanoseconds
+map : (Integer -> Integer) -> Nanoseconds -> Nanoseconds
 map f (Nanoseconds a) =
     Nanoseconds <| f a
 
 
-map2 : (BigInt -> BigInt -> BigInt) -> Nanoseconds -> Nanoseconds -> Nanoseconds
+map2 : (Integer -> Integer -> Integer) -> Nanoseconds -> Nanoseconds -> Nanoseconds
 map2 f (Nanoseconds a) (Nanoseconds b) =
     Nanoseconds <| f a b

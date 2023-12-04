@@ -1,31 +1,31 @@
 module Lib.Math.Rational exposing
     ( Rational
     , denominator
-    , fromBigInt
     , fromFloat
     , fromInt
+    , fromInteger
     , numerator
     , toString
     )
 
-import BigInt exposing (BigInt)
-import Lib.Math.BigInt.Extra as BigInt
+import Integer as Z exposing (Integer)
+import Lib.Math.Integer as Z
 
 
 type Rational
-    = Rational BigInt BigInt
+    = Rational Integer Integer
 
 
 
 -- ACCESSORS
 
 
-numerator : Rational -> BigInt
+numerator : Rational -> Integer
 numerator (Rational n _) =
     n
 
 
-denominator : Rational -> BigInt
+denominator : Rational -> Integer
 denominator (Rational _ d) =
     d
 
@@ -36,7 +36,7 @@ denominator (Rational _ d) =
 
 fromInt : Int -> Int -> Rational
 fromInt n d =
-    fromBigInt (BigInt.fromInt n) (BigInt.fromInt d)
+    fromInteger (Z.fromSafeInt n) (Z.fromSafeInt d)
 
 
 fromFloat : Int -> Float -> Rational
@@ -59,24 +59,24 @@ fromFloat decimalPlaces n =
     fromInt numer denom
 
 
-fromBigInt : BigInt -> BigInt -> Rational
-fromBigInt numer denom =
+fromInteger : Integer -> Integer -> Rational
+fromInteger numer denom =
     let
         divisor =
             gcd numer denom
 
         g =
-            if BigInt.isNegative denom then
-                BigInt.negate divisor
+            if Z.isNegative denom then
+                Z.negate divisor
 
             else
                 divisor
 
         n =
-            BigInt.div numer g
+            Z.div numer g
 
         d =
-            BigInt.div denom g
+            Z.div denom g
     in
     Rational n d
 
@@ -87,26 +87,26 @@ fromBigInt numer denom =
 
 toString : Rational -> String
 toString (Rational n d) =
-    if BigInt.isOne d then
-        BigInt.toString n
+    if d == Z.one then
+        Z.toString n
 
     else
-        BigInt.toString n ++ "/" ++ BigInt.toString d
+        Z.toString n ++ "/" ++ Z.toString d
 
 
 
 -- HELPERS
 
 
-gcd : BigInt -> BigInt -> BigInt
+gcd : Integer -> Integer -> Integer
 gcd a b =
-    gcdHelper (BigInt.abs a) (BigInt.abs b)
+    gcdHelper (Z.abs a) (Z.abs b)
 
 
-gcdHelper : BigInt -> BigInt -> BigInt
+gcdHelper : Integer -> Integer -> Integer
 gcdHelper a b =
-    if BigInt.isZero b then
+    if Z.isZero b then
         a
 
     else
-        gcdHelper b (Maybe.withDefault BigInt.zero <| BigInt.modBy b a)
+        gcdHelper b (Z.mod a b)

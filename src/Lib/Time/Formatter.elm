@@ -26,7 +26,7 @@ module Lib.Time.Formatter exposing
     , year
     )
 
-import BigInt exposing (BigInt)
+import Integer as Z exposing (Integer)
 import Lib.Time as Time exposing (Time)
 import Lib.Time.Days as Days
 import Lib.Time.Hours as Hours
@@ -162,7 +162,7 @@ iso8601Time resolution =
 
 year : Formatter
 year =
-    bigIntFormatter Years.toBigInt Time.getYear
+    bigIntFormatter Years.toInteger Time.getYear
 
 
 month : Formatter
@@ -177,7 +177,7 @@ shortMonth =
 
 monthNumber : Formatter
 monthNumber =
-    bigIntFormatter Month.toBigInt Time.getMonth
+    bigIntFormatter Month.toInteger Time.getMonth
 
 
 weekday : Formatter
@@ -192,32 +192,32 @@ shortWeekday =
 
 weekdayNumber : Formatter
 weekdayNumber =
-    bigIntFormatter Weekday.toBigInt Time.getWeekday
+    bigIntFormatter Weekday.toInteger Time.getWeekday
 
 
 dayOfMonth : Formatter
 dayOfMonth =
-    bigIntFormatter Days.toBigInt Time.getDayOfMonth
+    bigIntFormatter Days.toInteger Time.getDayOfMonth
 
 
 hour : Formatter
 hour =
-    bigIntFormatter Hours.toBigInt Time.getHour
+    bigIntFormatter Hours.toInteger Time.getHour
 
 
 minute : Formatter
 minute =
-    bigIntFormatter Minutes.toBigInt Time.getMinute
+    bigIntFormatter Minutes.toInteger Time.getMinute
 
 
 second : Formatter
 second =
-    bigIntFormatter Seconds.toBigInt Time.getSecond
+    bigIntFormatter Seconds.toInteger Time.getSecond
 
 
 millisecond : Formatter
 millisecond =
-    bigIntFormatter Milliseconds.toBigInt Time.getMillisecond
+    bigIntFormatter Milliseconds.toInteger Time.getMillisecond
 
 
 
@@ -258,10 +258,10 @@ accessorFormatter toString accessor =
     Formatter <| \zone time -> toString <| accessor zone time
 
 
-bigIntFormatter : (a -> BigInt) -> (Time.Zone -> Time -> a) -> Formatter
-bigIntFormatter toBigInt accessor =
+bigIntFormatter : (a -> Integer) -> (Time.Zone -> Time -> a) -> Formatter
+bigIntFormatter toInteger accessor =
     let
         toString =
-            toBigInt >> BigInt.toString
+            toInteger >> Z.toString
     in
     accessorFormatter toString accessor

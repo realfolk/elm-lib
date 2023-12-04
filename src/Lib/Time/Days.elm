@@ -2,14 +2,15 @@ module Lib.Time.Days exposing
     ( Days
     , add
     , div
-    , fromBigInt
     , fromInt
+    , fromInteger
     , mul
     , sub
-    , toBigInt
+    , toInteger
     )
 
-import BigInt exposing (BigInt)
+import Integer as Z exposing (Integer)
+import Lib.Math.Integer as Z
 
 
 
@@ -17,26 +18,26 @@ import BigInt exposing (BigInt)
 
 
 type Days
-    = Days BigInt
+    = Days Integer
 
 
 
 -- GENERAL HELPERS
 
 
-toBigInt : Days -> BigInt
-toBigInt (Days n) =
+toInteger : Days -> Integer
+toInteger (Days n) =
     n
 
 
-fromBigInt : BigInt -> Days
-fromBigInt =
+fromInteger : Integer -> Days
+fromInteger =
     Days
 
 
 fromInt : Int -> Days
 fromInt =
-    BigInt.fromInt >> fromBigInt
+    Z.fromSafeInt >> fromInteger
 
 
 
@@ -44,30 +45,30 @@ fromInt =
 
 
 add =
-    map2 BigInt.add
+    map2 Z.add
 
 
 sub =
-    map2 BigInt.sub
+    map2 Z.sub
 
 
 mul =
-    map2 BigInt.mul
+    map2 Z.mul
 
 
 div =
-    map2 BigInt.div
+    map2 Z.div
 
 
 
 -- INTERNAL HELPERS
 
 
-map : (BigInt -> BigInt) -> Days -> Days
+map : (Integer -> Integer) -> Days -> Days
 map f (Days a) =
     Days <| f a
 
 
-map2 : (BigInt -> BigInt -> BigInt) -> Days -> Days -> Days
+map2 : (Integer -> Integer -> Integer) -> Days -> Days -> Days
 map2 f (Days a) (Days b) =
     Days <| f a b

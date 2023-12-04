@@ -2,14 +2,15 @@ module Lib.Time.Weeks exposing
     ( Weeks
     , add
     , div
-    , fromBigInt
     , fromInt
+    , fromInteger
     , mul
     , sub
-    , toBigInt
+    , toInteger
     )
 
-import BigInt exposing (BigInt)
+import Integer as Z exposing (Integer)
+import Lib.Math.Integer as Z
 
 
 
@@ -17,26 +18,26 @@ import BigInt exposing (BigInt)
 
 
 type Weeks
-    = Weeks BigInt
+    = Weeks Integer
 
 
 
 -- GENERAL HELPERS
 
 
-toBigInt : Weeks -> BigInt
-toBigInt (Weeks n) =
+toInteger : Weeks -> Integer
+toInteger (Weeks n) =
     n
 
 
-fromBigInt : BigInt -> Weeks
-fromBigInt =
+fromInteger : Integer -> Weeks
+fromInteger =
     Weeks
 
 
 fromInt : Int -> Weeks
 fromInt =
-    BigInt.fromInt >> fromBigInt
+    Z.fromSafeInt >> fromInteger
 
 
 
@@ -44,30 +45,30 @@ fromInt =
 
 
 add =
-    map2 BigInt.add
+    map2 Z.add
 
 
 sub =
-    map2 BigInt.sub
+    map2 Z.sub
 
 
 mul =
-    map2 BigInt.mul
+    map2 Z.mul
 
 
 div =
-    map2 BigInt.div
+    map2 Z.div
 
 
 
 -- INTERNAL HELPERS
 
 
-map : (BigInt -> BigInt) -> Weeks -> Weeks
+map : (Integer -> Integer) -> Weeks -> Weeks
 map f (Weeks a) =
     Weeks <| f a
 
 
-map2 : (BigInt -> BigInt -> BigInt) -> Weeks -> Weeks -> Weeks
+map2 : (Integer -> Integer -> Integer) -> Weeks -> Weeks -> Weeks
 map2 f (Weeks a) (Weeks b) =
     Weeks <| f a b

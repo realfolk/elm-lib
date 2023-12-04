@@ -15,7 +15,6 @@ module Lib.Time.Date exposing
     , today
     )
 
-import BigInt exposing (BigInt)
 import Lib.Time as Time exposing (Time)
 import Lib.Time.Civil as Civil exposing (Civil)
 import Lib.Time.Days as Days exposing (Days)

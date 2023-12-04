@@ -19,7 +19,7 @@ module Lib.Time.Date.Formatter exposing
     , year
     )
 
-import BigInt exposing (BigInt)
+import Integer as Z exposing (Integer)
 import Lib.Time.Date as Date exposing (Date)
 import Lib.Time.Days as Days
 import Lib.Time.Month as Month
@@ -94,7 +94,7 @@ iso8601Date resolution =
 
 year : Formatter
 year =
-    bigIntFormatter Years.toBigInt Date.getYear
+    bigIntFormatter Years.toInteger Date.getYear
 
 
 month : Formatter
@@ -109,7 +109,7 @@ shortMonth =
 
 monthNumber : Formatter
 monthNumber =
-    bigIntFormatter Month.toBigInt Date.getMonth
+    bigIntFormatter Month.toInteger Date.getMonth
 
 
 weekday : Formatter
@@ -124,12 +124,12 @@ shortWeekday =
 
 weekdayNumber : Formatter
 weekdayNumber =
-    bigIntFormatter Weekday.toBigInt Date.getWeekday
+    bigIntFormatter Weekday.toInteger Date.getWeekday
 
 
 dayOfMonth : Formatter
 dayOfMonth =
-    bigIntFormatter Days.toBigInt Date.getDayOfMonth
+    bigIntFormatter Days.toInteger Date.getDayOfMonth
 
 
 
@@ -170,10 +170,10 @@ accessorFormatter toString accessor =
     Formatter <| accessor >> toString
 
 
-bigIntFormatter : (a -> BigInt) -> (Date -> a) -> Formatter
-bigIntFormatter toBigInt accessor =
+bigIntFormatter : (a -> Integer) -> (Date -> a) -> Formatter
+bigIntFormatter toInteger accessor =
     let
         toString =
-            toBigInt >> BigInt.toString
+            toInteger >> Z.toString
     in
     accessorFormatter toString accessor

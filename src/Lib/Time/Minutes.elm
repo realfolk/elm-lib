@@ -2,14 +2,15 @@ module Lib.Time.Minutes exposing
     ( Minutes
     , add
     , div
-    , fromBigInt
     , fromInt
+    , fromInteger
     , mul
     , sub
-    , toBigInt
+    , toInteger
     )
 
-import BigInt exposing (BigInt)
+import Integer as Z exposing (Integer)
+import Lib.Math.Integer as Z
 
 
 
@@ -17,26 +18,26 @@ import BigInt exposing (BigInt)
 
 
 type Minutes
-    = Minutes BigInt
+    = Minutes Integer
 
 
 
 -- GENERAL HELPERS
 
 
-toBigInt : Minutes -> BigInt
-toBigInt (Minutes n) =
+toInteger : Minutes -> Integer
+toInteger (Minutes n) =
     n
 
 
-fromBigInt : BigInt -> Minutes
-fromBigInt =
+fromInteger : Integer -> Minutes
+fromInteger =
     Minutes
 
 
 fromInt : Int -> Minutes
 fromInt =
-    BigInt.fromInt >> fromBigInt
+    Z.fromSafeInt >> fromInteger
 
 
 
@@ -44,30 +45,30 @@ fromInt =
 
 
 add =
-    map2 BigInt.add
+    map2 Z.add
 
 
 sub =
-    map2 BigInt.sub
+    map2 Z.sub
 
 
 mul =
-    map2 BigInt.mul
+    map2 Z.mul
 
 
 div =
-    map2 BigInt.div
+    map2 Z.div
 
 
 
 -- INTERNAL HELPERS
 
 
-map : (BigInt -> BigInt) -> Minutes -> Minutes
+map : (Integer -> Integer) -> Minutes -> Minutes
 map f (Minutes a) =
     Minutes <| f a
 
 
-map2 : (BigInt -> BigInt -> BigInt) -> Minutes -> Minutes -> Minutes
+map2 : (Integer -> Integer -> Integer) -> Minutes -> Minutes -> Minutes
 map2 f (Minutes a) (Minutes b) =
     Minutes <| f a b

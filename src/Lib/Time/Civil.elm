@@ -25,7 +25,8 @@ The motivation behind this module stems from the fact that `elm/time` exports an
 
 -}
 
-import BigInt
+import Integer as Z
+import Lib.Math.Integer as Z
 import Lib.Time as Time exposing (Time)
 import Lib.Time.Days as Days exposing (Days)
 import Lib.Time.Hours as Hours exposing (Hours)
@@ -63,10 +64,10 @@ date zone year month day =
         { year = year
         , month = month
         , day = day
-        , hour = Hours.fromBigInt <| BigInt.fromInt 0
-        , minute = Minutes.fromBigInt <| BigInt.fromInt 0
-        , second = Seconds.fromBigInt <| BigInt.fromInt 0
-        , millisecond = Milliseconds.fromBigInt <| BigInt.fromInt 0
+        , hour = Hours.fromInteger <| Z.zero
+        , minute = Minutes.fromInteger <| Z.zero
+        , second = Seconds.fromInteger <| Z.zero
+        , millisecond = Milliseconds.fromInteger <| Z.zero
         , zone = zone
         }
 
@@ -102,7 +103,7 @@ toTime ((Civil record) as civil) =
 
         zoneOffset =
             getZoneOffset record.zone
-                |> Milliseconds.mul (Milliseconds.fromBigInt (BigInt.fromInt -1))
+                |> Milliseconds.mul (Milliseconds.fromInteger Z.negativeOne)
     in
     Time.addMilliseconds zoneOffset unadjustedTime
 
@@ -155,94 +156,92 @@ toTimeWithoutZoneAdjustment : Civil -> Time
 toTimeWithoutZoneAdjustment (Civil record) =
     let
         yearAdjustment =
-            BigInt.fromInt <|
-                if BigInt.lte (Month.toBigInt record.month) (BigInt.fromInt 2) then
-                    -1
+            if Month.toInteger record.month |> Z.isLessThanOrEqual Z.two then
+                Z.negativeOne
 
-                else
-                    0
+            else
+                Z.zero
 
         numYears =
-            Years.toBigInt record.year
-                |> BigInt.add yearAdjustment
+            Years.toInteger record.year
+                |> Z.add yearAdjustment
 
         eraAdjustment =
-            BigInt.fromInt <|
-                if BigInt.gte numYears (BigInt.fromInt 0) then
-                    0
+            if Z.isNonNegative numYears then
+                Z.zero
 
-                else
-                    -399
+            else
+                Z.fromSafeInt -399
 
         numEras =
-            BigInt.add numYears eraAdjustment
-                |> (\n -> BigInt.div n (BigInt.fromInt 400))
+            Z.add numYears eraAdjustment
+                |> (\n -> Z.div n (Z.fromSafeInt 400))
 
         numEraYears =
-            BigInt.fromInt 400
-                |> BigInt.mul numEras
-                |> BigInt.sub numYears
+            Z.fromSafeInt 400
+                |> Z.mul numEras
+                |> Z.sub numYears
 
         numMonths =
-            Month.toBigInt record.month
+            Month.toInteger record.month
 
         monthAdjustment =
-            BigInt.fromInt <|
-                if BigInt.gt numMonths (BigInt.fromInt 2) then
+            Z.fromSafeInt <|
+                if numMonths |> Z.isGreaterThan Z.two then
                     -3
 
                 else
                     9
 
         numMonthsInDays =
-            BigInt.add numMonths monthAdjustment
-                |> BigInt.mul (BigInt.fromInt 153)
-                |> BigInt.add (BigInt.fromInt 2)
-                |> (\n -> BigInt.div n (BigInt.fromInt 5))
+            Z.add numMonths monthAdjustment
+                |> Z.mul (Z.fromSafeInt 153)
+                |> Z.add Z.two
+                |> (\n -> Z.div n Z.five)
 
         numYearDays =
-            Days.toBigInt record.day
-                |> BigInt.add (BigInt.fromInt -1)
-                |> BigInt.add numMonthsInDays
+            Days.toInteger record.day
+                |> Z.add Z.negativeOne
+                |> Z.add numMonthsInDays
 
         numEraDays =
             let
                 divEraYearsBy n =
-                    BigInt.fromInt n
-                        |> BigInt.div numEraYears
+                    Z.fromSafeInt n
+                        |> Z.div numEraYears
             in
-            BigInt.fromInt 365
-                |> BigInt.mul numEraYears
-                |> BigInt.add (divEraYearsBy 4)
-                |> BigInt.add (divEraYearsBy -100)
-                |> BigInt.add numYearDays
+            Z.fromSafeInt 365
+                |> Z.mul numEraYears
+                |> Z.add (divEraYearsBy 4)
+                |> Z.add (divEraYearsBy -100)
+                |> Z.add numYearDays
 
         numDaysInMilliseconds =
-            BigInt.fromInt 146097
-                |> BigInt.mul numEras
-                |> BigInt.add numEraDays
-                |> BigInt.add (BigInt.fromInt -719468)
-                |> BigInt.mul (BigInt.fromInt (24 * 60 * 60 * 1000))
+            Z.fromSafeInt 146097
+                |> Z.mul numEras
+                |> Z.add numEraDays
+                |> Z.add (Z.fromSafeInt -719468)
+                |> Z.mul (Z.fromSafeInt (24 * 60 * 60 * 1000))
 
         numHoursInMilliseconds =
-            Hours.toBigInt record.hour
-                |> BigInt.mul (BigInt.fromInt (60 * 60 * 1000))
+            Hours.toInteger record.hour
+                |> Z.mul (Z.fromSafeInt (60 * 60 * 1000))
 
         numMinutesInMilliseconds =
-            Minutes.toBigInt record.minute
-                |> BigInt.mul (BigInt.fromInt (60 * 1000))
+            Minutes.toInteger record.minute
+                |> Z.mul (Z.fromSafeInt (60 * 1000))
 
         numSecondsInMilliseconds =
-            Seconds.toBigInt record.second
-                |> BigInt.mul (BigInt.fromInt 1000)
+            Seconds.toInteger record.second
+                |> Z.mul (Z.fromSafeInt 1000)
 
         numMilliseconds =
-            Milliseconds.toBigInt record.millisecond
+            Milliseconds.toInteger record.millisecond
     in
     numDaysInMilliseconds
-        |> BigInt.add numHoursInMilliseconds
-        |> BigInt.add numMinutesInMilliseconds
-        |> BigInt.add numSecondsInMilliseconds
-        |> BigInt.add numMilliseconds
-        |> Milliseconds.fromBigInt
+        |> Z.add numHoursInMilliseconds
+        |> Z.add numMinutesInMilliseconds
+        |> Z.add numSecondsInMilliseconds
+        |> Z.add numMilliseconds
+        |> Milliseconds.fromInteger
         |> Time.fromMilliseconds

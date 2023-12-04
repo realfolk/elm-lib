@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-nix develop path:./ $@
+nix develop path:./ "$@"

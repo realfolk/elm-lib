@@ -1,7 +1,7 @@
 module Test.Lib.Time.Civil exposing (suite)
 
-import BigInt
 import Expect
+import Integer as Z
 import Lib.Time as Time exposing (Time)
 import Lib.Time.Civil as Civil
 import Lib.Time.Days as Days
@@ -92,7 +92,7 @@ toTime : Test
 toTime =
     let
         toString =
-            Time.toMilliseconds >> Milliseconds.toBigInt >> BigInt.toString
+            Time.toMilliseconds >> Milliseconds.toInteger >> Z.toString
 
         makeTest time =
             test (time.description ++ " (" ++ formatTime time.time ++ ")") <|
@@ -134,8 +134,8 @@ getZoneOffset =
             test (offsetToString offset) <|
                 \_ ->
                     Civil.getZoneOffset (Time.customZone offset [])
-                        |> Milliseconds.toBigInt
-                        |> BigInt.toString
+                        |> Milliseconds.toInteger
+                        |> Z.toString
                         |> Expect.equal (String.fromInt <| offset * 60 * 1000)
     in
     describe "getZoneOffset" <|

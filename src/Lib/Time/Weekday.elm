@@ -1,16 +1,16 @@
 module Lib.Time.Weekday exposing
     ( Weekday(..)
-    , fromBigInt
     , fromExternalWeekday
     , fromInt
-    , toBigInt
+    , fromInteger
     , toExternalWeekday
     , toInt
+    , toInteger
     , toShortString
     , toString
     )
 
-import BigInt exposing (BigInt)
+import Integer as Z exposing (Integer)
 import Time
 
 
@@ -74,32 +74,32 @@ toShortString weekday =
             "Sun"
 
 
-toBigInt : Weekday -> BigInt
-toBigInt =
-    toInt >> BigInt.fromInt
+toInteger : Weekday -> Integer
+toInteger =
+    toInt >> Z.fromSafeInt
 
 
-fromBigInt : BigInt -> Maybe Weekday
-fromBigInt n =
-    if n == BigInt.fromInt 1 then
+fromInteger : Integer -> Maybe Weekday
+fromInteger n =
+    if n == Z.one then
         Just Monday
 
-    else if n == BigInt.fromInt 2 then
+    else if n == Z.two then
         Just Tuesday
 
-    else if n == BigInt.fromInt 3 then
+    else if n == Z.three then
         Just Wednesday
 
-    else if n == BigInt.fromInt 4 then
+    else if n == Z.four then
         Just Thursday
 
-    else if n == BigInt.fromInt 5 then
+    else if n == Z.five then
         Just Friday
 
-    else if n == BigInt.fromInt 6 then
+    else if n == Z.six then
         Just Saturday
 
-    else if n == BigInt.fromInt 7 then
+    else if n == Z.seven then
         Just Sunday
 
     else
@@ -133,7 +133,7 @@ toInt weekday =
 
 fromInt : Int -> Maybe Weekday
 fromInt =
-    BigInt.fromInt >> fromBigInt
+    Z.fromSafeInt >> fromInteger
 
 
 toExternalWeekday : Weekday -> Time.Weekday

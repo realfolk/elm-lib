@@ -50,7 +50,8 @@ module Lib.Time exposing
     , utc
     )
 
-import BigInt exposing (BigInt)
+import Integer as Z exposing (Integer)
+import Lib.Math.Integer as Z
 import Lib.Task as Task
 import Lib.Time.Days as Days exposing (Days)
 import Lib.Time.Hours as Hours exposing (Hours)
@@ -64,6 +65,7 @@ import Lib.Time.Seconds as Seconds exposing (Seconds)
 import Lib.Time.Weekday as Weekday exposing (Weekday)
 import Lib.Time.Weeks as Weeks exposing (Weeks)
 import Lib.Time.Years as Years exposing (Years)
+import Natural as N
 import Task exposing (Task)
 import Time
 
@@ -128,8 +130,8 @@ getYear : Zone -> Time -> Years
 getYear (Zone zone) time =
     toPosix time
         |> Time.toYear zone
-        |> BigInt.fromInt
-        |> Years.fromBigInt
+        |> Z.fromSafeInt
+        |> Years.fromInteger
 
 
 getMonth : Zone -> Time -> Month
@@ -150,40 +152,40 @@ getDayOfMonth : Zone -> Time -> Days
 getDayOfMonth (Zone zone) time =
     toPosix time
         |> Time.toDay zone
-        |> BigInt.fromInt
-        |> Days.fromBigInt
+        |> Z.fromSafeInt
+        |> Days.fromInteger
 
 
 getHour : Zone -> Time -> Hours
 getHour (Zone zone) time =
     toPosix time
         |> Time.toHour zone
-        |> BigInt.fromInt
-        |> Hours.fromBigInt
+        |> Z.fromSafeInt
+        |> Hours.fromInteger
 
 
 getMinute : Zone -> Time -> Minutes
 getMinute (Zone zone) time =
     toPosix time
         |> Time.toMinute zone
-        |> BigInt.fromInt
-        |> Minutes.fromBigInt
+        |> Z.fromSafeInt
+        |> Minutes.fromInteger
 
 
 getSecond : Zone -> Time -> Seconds
 getSecond (Zone zone) time =
     toPosix time
         |> Time.toSecond zone
-        |> BigInt.fromInt
-        |> Seconds.fromBigInt
+        |> Z.fromSafeInt
+        |> Seconds.fromInteger
 
 
 getMillisecond : Zone -> Time -> Milliseconds
 getMillisecond (Zone zone) time =
     toPosix time
         |> Time.toMillis zone
-        |> BigInt.fromInt
-        |> Milliseconds.fromBigInt
+        |> Z.fromSafeInt
+        |> Milliseconds.fromInteger
 
 
 
@@ -191,15 +193,15 @@ getMillisecond (Zone zone) time =
 
 
 compare : Time -> Time -> Order
-compare a b =
+compare t1 t2 =
     let
-        aBigInt =
-            toPicoseconds a |> Picoseconds.toBigInt
+        x =
+            toPicoseconds t1 |> Picoseconds.toInteger
 
-        bBigInt =
-            toPicoseconds b |> Picoseconds.toBigInt
+        y =
+            toPicoseconds t2 |> Picoseconds.toInteger
     in
-    BigInt.compare aBigInt bBigInt
+    Z.compare x y
 
 
 
@@ -270,16 +272,22 @@ add toTime a (Time psA) =
 
 fromPosix : Time.Posix -> Time
 fromPosix =
-    Time.posixToMillis >> BigInt.fromInt >> Milliseconds.fromBigInt >> fromMilliseconds
+    Time.posixToMillis >> Z.fromSafeInt >> Milliseconds.fromInteger >> fromMilliseconds
 
 
-{-| Converts a `Time` into a `Time.Posix` from `elm/time`. This conversion is done by first converting `Time`'s internal `BigInt` to a regular `Int`, then from that `Int` to `Time.Posix` using `millisToPosix`. Since `BigInt` serializes integers of any length, there is a possibility that data can be lost in the conversion (`Int`s are limited by CPU word length). In this case, the resulting `Time.Posix` is generated from `0` as a fallback.
+{-| Converts a `Time` into a `Time.Posix` from `elm/time`.
+
+This conversion is done by first converting `Time`'s internal `Integer` to a regular `Int`,
+then from that `Int` to `Time.Posix` using `millisToPosix`. Since `Integer` serializes integers of any length,
+there is a possibility that data can be lost in the conversion (`Int`s are limited by CPU word length).
+In this case, the resulting `Time.Posix` is generated from `0` as a fallback.
+
 -}
 toPosix : Time -> Time.Posix
 toPosix time =
     toMilliseconds time
-        |> Milliseconds.toBigInt
-        |> BigInt.toString
+        |> Milliseconds.toInteger
+        |> Z.toString
         |> String.toInt
         |> Maybe.withDefault 0
         |> Time.millisToPosix
@@ -288,124 +296,124 @@ toPosix time =
 toWeeks : Time -> Weeks
 toWeeks time =
     toDays time
-        |> Days.toBigInt
+        |> Days.toInteger
         |> divBy 7
-        |> Weeks.fromBigInt
+        |> Weeks.fromInteger
 
 
 fromWeeks : Weeks -> Time
 fromWeeks weeks =
-    Weeks.toBigInt weeks
+    Weeks.toInteger weeks
         |> mulBy 7
-        |> Days.fromBigInt
+        |> Days.fromInteger
         |> fromDays
 
 
 toDays : Time -> Days
 toDays time =
     toHours time
-        |> Hours.toBigInt
+        |> Hours.toInteger
         |> divBy 24
-        |> Days.fromBigInt
+        |> Days.fromInteger
 
 
 fromDays : Days -> Time
 fromDays days =
-    Days.toBigInt days
+    Days.toInteger days
         |> mulBy 24
-        |> Hours.fromBigInt
+        |> Hours.fromInteger
         |> fromHours
 
 
 toHours : Time -> Hours
 toHours time =
     toMinutes time
-        |> Minutes.toBigInt
+        |> Minutes.toInteger
         |> divBy 60
-        |> Hours.fromBigInt
+        |> Hours.fromInteger
 
 
 fromHours : Hours -> Time
 fromHours hours =
-    Hours.toBigInt hours
+    Hours.toInteger hours
         |> mulBy 60
-        |> Minutes.fromBigInt
+        |> Minutes.fromInteger
         |> fromMinutes
 
 
 toMinutes : Time -> Minutes
 toMinutes time =
     toSeconds time
-        |> Seconds.toBigInt
+        |> Seconds.toInteger
         |> divBy 60
-        |> Minutes.fromBigInt
+        |> Minutes.fromInteger
 
 
 fromMinutes : Minutes -> Time
 fromMinutes minutes =
-    Minutes.toBigInt minutes
+    Minutes.toInteger minutes
         |> mulBy 60
-        |> Seconds.fromBigInt
+        |> Seconds.fromInteger
         |> fromSeconds
 
 
 toSeconds : Time -> Seconds
 toSeconds (Time ps) =
     pow10 12
-        |> BigInt.div (Picoseconds.toBigInt ps)
-        |> Seconds.fromBigInt
+        |> Z.div (Picoseconds.toInteger ps)
+        |> Seconds.fromInteger
 
 
 fromSeconds : Seconds -> Time
 fromSeconds seconds =
     pow10 12
-        |> BigInt.mul (Seconds.toBigInt seconds)
-        |> Picoseconds.fromBigInt
+        |> Z.mul (Seconds.toInteger seconds)
+        |> Picoseconds.fromInteger
         |> Time
 
 
 toMilliseconds : Time -> Milliseconds
 toMilliseconds (Time ps) =
     pow10 9
-        |> BigInt.div (Picoseconds.toBigInt ps)
-        |> Milliseconds.fromBigInt
+        |> Z.div (Picoseconds.toInteger ps)
+        |> Milliseconds.fromInteger
 
 
 fromMilliseconds : Milliseconds -> Time
 fromMilliseconds milliseconds =
     pow10 9
-        |> BigInt.mul (Milliseconds.toBigInt milliseconds)
-        |> Picoseconds.fromBigInt
+        |> Z.mul (Milliseconds.toInteger milliseconds)
+        |> Picoseconds.fromInteger
         |> Time
 
 
 toMicroseconds : Time -> Microseconds
 toMicroseconds (Time ps) =
     pow10 6
-        |> BigInt.div (Picoseconds.toBigInt ps)
-        |> Microseconds.fromBigInt
+        |> Z.div (Picoseconds.toInteger ps)
+        |> Microseconds.fromInteger
 
 
 fromMicroseconds : Microseconds -> Time
 fromMicroseconds microseconds =
     pow10 6
-        |> BigInt.mul (Microseconds.toBigInt microseconds)
-        |> Picoseconds.fromBigInt
+        |> Z.mul (Microseconds.toInteger microseconds)
+        |> Picoseconds.fromInteger
         |> Time
 
 
 toNanoseconds : Time -> Nanoseconds
 toNanoseconds (Time ps) =
     pow10 3
-        |> BigInt.div (Picoseconds.toBigInt ps)
-        |> Nanoseconds.fromBigInt
+        |> Z.div (Picoseconds.toInteger ps)
+        |> Nanoseconds.fromInteger
 
 
 fromNanoseconds : Nanoseconds -> Time
 fromNanoseconds nanoseconds =
     pow10 3
-        |> BigInt.mul (Nanoseconds.toBigInt nanoseconds)
-        |> Picoseconds.fromBigInt
+        |> Z.mul (Nanoseconds.toInteger nanoseconds)
+        |> Picoseconds.fromInteger
         |> Time
 
 
@@ -435,16 +443,16 @@ posixToMillis =
 -- INTERNAL HELPERS
 
 
-pow10 : Int -> BigInt
-pow10 exp =
-    BigInt.pow (BigInt.fromInt 10) (BigInt.fromInt exp)
+pow10 : Int -> Integer
+pow10 n =
+    Z.exp Z.ten (N.fromSafeInt n)
 
 
-mulBy : Int -> BigInt -> BigInt
+mulBy : Int -> Integer -> Integer
 mulBy n =
-    BigInt.mul (BigInt.fromInt n)
+    Z.mul (Z.fromSafeInt n)
 
 
-divBy : Int -> BigInt -> BigInt
-divBy n bi =
-    BigInt.div bi (BigInt.fromInt n)
+divBy : Int -> Integer -> Integer
+divBy n z =
+    Z.div z (Z.fromSafeInt n)

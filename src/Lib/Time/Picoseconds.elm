@@ -2,14 +2,15 @@ module Lib.Time.Picoseconds exposing
     ( Picoseconds
     , add
     , div
-    , fromBigInt
     , fromInt
+    , fromInteger
     , mul
     , sub
-    , toBigInt
+    , toInteger
     )
 
-import BigInt exposing (BigInt)
+import Integer as Z exposing (Integer)
+import Lib.Math.Integer as Z
 
 
 
@@ -17,26 +18,26 @@ import BigInt exposing (BigInt)
 
 
 type Picoseconds
-    = Picoseconds BigInt
+    = Picoseconds Integer
 
 
 
 -- GENERAL HELPERS
 
 
-toBigInt : Picoseconds -> BigInt
-toBigInt (Picoseconds n) =
+toInteger : Picoseconds -> Integer
+toInteger (Picoseconds n) =
     n
 
 
-fromBigInt : BigInt -> Picoseconds
-fromBigInt =
+fromInteger : Integer -> Picoseconds
+fromInteger =
     Picoseconds
 
 
 fromInt : Int -> Picoseconds
 fromInt =
-    BigInt.fromInt >> fromBigInt
+    Z.fromSafeInt >> fromInteger
 
 
 
@@ -44,30 +45,30 @@ fromInt =
 
 
 add =
-    map2 BigInt.add
+    map2 Z.add
 
 
 sub =
-    map2 BigInt.sub
+    map2 Z.sub
 
 
 mul =
-    map2 BigInt.mul
+    map2 Z.mul
 
 
 div =
-    map2 BigInt.div
+    map2 Z.div
 
 
 
 -- INTERNAL HELPERS
 
 
-map : (BigInt -> BigInt) -> Picoseconds -> Picoseconds
+map : (Integer -> Integer) -> Picoseconds -> Picoseconds
 map f (Picoseconds a) =
     Picoseconds <| f a
 
 
-map2 : (BigInt -> BigInt -> BigInt) -> Picoseconds -> Picoseconds -> Picoseconds
+map2 : (Integer -> Integer -> Integer) -> Picoseconds -> Picoseconds -> Picoseconds
 map2 f (Picoseconds a) (Picoseconds b) =
     Picoseconds <| f a b

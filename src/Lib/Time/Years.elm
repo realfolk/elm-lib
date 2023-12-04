@@ -2,14 +2,15 @@ module Lib.Time.Years exposing
     ( Years
     , add
     , div
-    , fromBigInt
     , fromInt
+    , fromInteger
     , mul
     , sub
-    , toBigInt
+    , toInteger
     )
 
-import BigInt exposing (BigInt)
+import Integer as Z exposing (Integer)
+import Lib.Math.Integer as Z
 
 
 
@@ -17,26 +18,26 @@ import BigInt exposing (BigInt)
 
 
 type Years
-    = Years BigInt
+    = Years Integer
 
 
 
 -- GENERAL HELPERS
 
 
-toBigInt : Years -> BigInt
-toBigInt (Years n) =
+toInteger : Years -> Integer
+toInteger (Years n) =
     n
 
 
-fromBigInt : BigInt -> Years
-fromBigInt =
+fromInteger : Integer -> Years
+fromInteger =
     Years
 
 
 fromInt : Int -> Years
 fromInt =
-    BigInt.fromInt >> fromBigInt
+    Z.fromSafeInt >> fromInteger
 
 
 
@@ -44,30 +45,30 @@ fromInt =
 
 
 add =
-    map2 BigInt.add
+    map2 Z.add
 
 
 sub =
-    map2 BigInt.sub
+    map2 Z.sub
 
 
 mul =
-    map2 BigInt.mul
+    map2 Z.mul
 
 
 div =
-    map2 BigInt.div
+    map2 Z.div
 
 
 
 -- INTERNAL HELPERS
 
 
-map : (BigInt -> BigInt) -> Years -> Years
+map : (Integer -> Integer) -> Years -> Years
 map f (Years a) =
     Years <| f a
 
 
-map2 : (BigInt -> BigInt -> BigInt) -> Years -> Years -> Years
+map2 : (Integer -> Integer -> Integer) -> Years -> Years -> Years
 map2 f (Years a) (Years b) =
     Years <| f a b

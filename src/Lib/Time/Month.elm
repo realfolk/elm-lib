@@ -1,16 +1,17 @@
 module Lib.Time.Month exposing
     ( Month(..)
-    , fromBigInt
     , fromExternalMonth
     , fromInt
-    , toBigInt
+    , fromInteger
     , toExternalMonth
     , toInt
+    , toInteger
     , toShortString
     , toString
     )
 
-import BigInt exposing (BigInt)
+import Integer as Z exposing (Integer)
+import Lib.Math.Integer as Z
 import Time
 
 
@@ -109,47 +110,47 @@ toShortString month =
             "Dec"
 
 
-toBigInt : Month -> BigInt
-toBigInt =
-    toInt >> BigInt.fromInt
+toInteger : Month -> Integer
+toInteger =
+    toInt >> Z.fromSafeInt
 
 
-fromBigInt : BigInt -> Maybe Month
-fromBigInt n =
-    if n == BigInt.fromInt 1 then
+fromInteger : Integer -> Maybe Month
+fromInteger z =
+    if z == Z.one then
         Just January
 
-    else if n == BigInt.fromInt 2 then
+    else if z == Z.two then
         Just February
 
-    else if n == BigInt.fromInt 3 then
+    else if z == Z.three then
         Just March
 
-    else if n == BigInt.fromInt 4 then
+    else if z == Z.four then
         Just April
 
-    else if n == BigInt.fromInt 5 then
+    else if z == Z.five then
         Just May
 
-    else if n == BigInt.fromInt 6 then
+    else if z == Z.six then
         Just June
 
-    else if n == BigInt.fromInt 7 then
+    else if z == Z.seven then
         Just July
 
-    else if n == BigInt.fromInt 8 then
+    else if z == Z.eight then
         Just August
 
-    else if n == BigInt.fromInt 9 then
+    else if z == Z.nine then
         Just September
 
-    else if n == BigInt.fromInt 10 then
+    else if z == Z.ten then
         Just October
 
-    else if n == BigInt.fromInt 11 then
+    else if z == Z.eleven then
         Just November
 
-    else if n == BigInt.fromInt 12 then
+    else if z == Z.twelve then
         Just December
 
     else
@@ -198,7 +199,7 @@ toInt month =
 
 fromInt : Int -> Maybe Month
 fromInt =
-    BigInt.fromInt >> fromBigInt
+    Z.fromSafeInt >> fromInteger
 
 
 toExternalMonth : Month -> Time.Month
