@@ -73,10 +73,10 @@ fromInteger numer denom =
                 divisor
 
         n =
-            Z.div numer g
+            Z.safeDiv numer g
 
         d =
-            Z.div denom g
+            Z.safeDiv denom g
     in
     Rational n d
 
@@ -109,4 +109,4 @@ gcdHelper a b =
         a
 
     else
-        gcdHelper b (Z.mod a b)
+        gcdHelper b (Z.safeMod a b)

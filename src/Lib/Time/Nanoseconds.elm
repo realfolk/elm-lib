@@ -57,7 +57,7 @@ mul =
 
 
 div =
-    map2 Z.div
+    map2 Z.safeDiv
 
 
 

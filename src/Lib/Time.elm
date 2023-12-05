@@ -359,14 +359,14 @@ fromMinutes minutes =
 
 toSeconds : Time -> Seconds
 toSeconds (Time ps) =
-    pow10 12
-        |> Z.div (Picoseconds.toInteger ps)
+    Z.safePow10 12
+        |> Z.safeDiv (Picoseconds.toInteger ps)
         |> Seconds.fromInteger
 
 
 fromSeconds : Seconds -> Time
 fromSeconds seconds =
-    pow10 12
+    Z.safePow10 12
         |> Z.mul (Seconds.toInteger seconds)
         |> Picoseconds.fromInteger
         |> Time
@@ -374,14 +374,14 @@ fromSeconds seconds =
 
 toMilliseconds : Time -> Milliseconds
 toMilliseconds (Time ps) =
-    pow10 9
-        |> Z.div (Picoseconds.toInteger ps)
+    Z.safePow10 9
+        |> Z.safeDiv (Picoseconds.toInteger ps)
         |> Milliseconds.fromInteger
 
 
 fromMilliseconds : Milliseconds -> Time
 fromMilliseconds milliseconds =
-    pow10 9
+    Z.safePow10 9
         |> Z.mul (Milliseconds.toInteger milliseconds)
         |> Picoseconds.fromInteger
         |> Time
@@ -389,14 +389,14 @@ fromMilliseconds milliseconds =
 
 toMicroseconds : Time -> Microseconds
 toMicroseconds (Time ps) =
-    pow10 6
-        |> Z.div (Picoseconds.toInteger ps)
+    Z.safePow10 6
+        |> Z.safeDiv (Picoseconds.toInteger ps)
         |> Microseconds.fromInteger
 
 
 fromMicroseconds : Microseconds -> Time
 fromMicroseconds microseconds =
-    pow10 6
+    Z.safePow10 6
         |> Z.mul (Microseconds.toInteger microseconds)
         |> Picoseconds.fromInteger
         |> Time
@@ -404,14 +404,14 @@ fromMicroseconds microseconds =
 
 toNanoseconds : Time -> Nanoseconds
 toNanoseconds (Time ps) =
-    pow10 3
-        |> Z.div (Picoseconds.toInteger ps)
+    Z.safePow10 3
+        |> Z.safeDiv (Picoseconds.toInteger ps)
         |> Nanoseconds.fromInteger
 
 
 fromNanoseconds : Nanoseconds -> Time
 fromNanoseconds nanoseconds =
-    pow10 3
+    Z.safePow10 3
         |> Z.mul (Nanoseconds.toInteger nanoseconds)
         |> Picoseconds.fromInteger
         |> Time
@@ -443,16 +443,11 @@ posixToMillis =
 -- INTERNAL HELPERS
 
 
-pow10 : Int -> Integer
-pow10 n =
-    Z.exp Z.ten (N.fromSafeInt n)
-
-
 mulBy : Int -> Integer -> Integer
 mulBy n =
     Z.mul (Z.fromSafeInt n)
 
 
 divBy : Int -> Integer -> Integer
-divBy n z =
-    Z.div z (Z.fromSafeInt n)
+divBy n =
+    Z.safeDivBy (Z.fromSafeInt n)

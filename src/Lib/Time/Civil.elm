@@ -175,7 +175,7 @@ toTimeWithoutZoneAdjustment (Civil record) =
 
         numEras =
             Z.add numYears eraAdjustment
-                |> (\n -> Z.div n (Z.fromSafeInt 400))
+                |> Z.safeDivBy (Z.fromSafeInt 400)
 
         numEraYears =
             Z.fromSafeInt 400
@@ -197,7 +197,7 @@ toTimeWithoutZoneAdjustment (Civil record) =
             Z.add numMonths monthAdjustment
                 |> Z.mul (Z.fromSafeInt 153)
                 |> Z.add Z.two
-                |> (\n -> Z.div n Z.five)
+                |> Z.safeDivBy Z.five
 
         numYearDays =
             Days.toInteger record.day
@@ -208,7 +208,7 @@ toTimeWithoutZoneAdjustment (Civil record) =
             let
                 divEraYearsBy n =
                     Z.fromSafeInt n
-                        |> Z.div numEraYears
+                        |> Z.safeDiv numEraYears
             in
             Z.fromSafeInt 365
                 |> Z.mul numEraYears
