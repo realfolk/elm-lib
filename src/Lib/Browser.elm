@@ -4,6 +4,7 @@ module Lib.Browser exposing
     , UrlRequest(..)
     , Viewport
     , application
+    , blur
     , document
     , element
     , focus
@@ -149,6 +150,12 @@ fromExternalUrlRequest request =
 
 
 -- DOM
+
+
+blur : String -> msg -> Cmd msg
+blur id msg =
+    BD.blur id
+        |> Task.attempt (always msg)
 
 
 focus : String -> msg -> Cmd msg
