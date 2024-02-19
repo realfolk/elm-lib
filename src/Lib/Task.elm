@@ -9,6 +9,5 @@ safely fallback toMsg task =
 
 
 dispatch : msg -> Cmd msg
-dispatch msg =
-    Task.succeed msg
-        |> Task.perform (always msg)
+dispatch =
+    Task.succeed >> Task.perform identity
